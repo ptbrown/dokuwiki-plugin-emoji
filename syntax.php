@@ -27,7 +27,7 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
         $smileys = array_keys($this->smileys);
         /* Inserts smileys into the shortcode list so I can use a single callback to handle both. */
         Emojione::$shortcode_replace = array_merge(Emojione::$shortcode_replace, Emojione::$ascii_replace);
-        $this->smileyRegexp = '(?:'.join('|',array_map('Doku_Lexer_Escape', $smileys)).')';
+        $this->smileyRegexp = '(?:'.join('|',array_map('preg_quote_cb', $smileys)).')';
     }
 
     public function getType() {
@@ -40,8 +40,8 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
 
     public function connectTo($mode) {
         $this->Lexer->addSpecialPattern($this->getUnicodeRegexp(), $mode, 'plugin_emoji');
-        $this->Lexer->addSpecialPattern('(?<=\s|^)'.$this->getShortnameRegexp().'(?=\s|$)', $mode, 'plugin_emoji');
-        $this->Lexer->addSpecialPattern('(?<=\s|^)'.$this->getSmileyRegexp().'(?=\s|$)', $mode, 'plugin_emoji');
+        $this->Lexer->addSpecialPattern('(?<=\W|^)'.$this->getShortnameRegexp().'(?=\W|$)', $mode, 'plugin_emoji');
+        $this->Lexer->addSpecialPattern('(?<=\W|^)'.$this->getSmileyRegexp().'(?=\W|$)', $mode, 'plugin_emoji');
     }
 
     public function handle($match, $state, $pos, Doku_Handler $handler) {
