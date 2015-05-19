@@ -39,7 +39,9 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
     }
 
     public function connectTo($mode) {
-        $this->Lexer->addSpecialPattern('(?<=\W|^)'.$this->getSmileyRegexp().'(?=\W|$)', $mode, 'plugin_emoji');
+        $this->Lexer->addSpecialPattern($this->getUnicodeRegexp(), $mode, 'plugin_emoji');
+        $this->Lexer->addSpecialPattern('(?<=\s|^)'.$this->getShortnameRegexp().'(?=\s|$)', $mode, 'plugin_emoji');
+        $this->Lexer->addSpecialPattern('(?<=\s|^)'.$this->getSmileyRegexp().'(?=\s|$)', $mode, 'plugin_emoji');
     }
 
     public function handle($match, $state, $pos, Doku_Handler $handler) {
@@ -53,9 +55,9 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
         switch($mode) {
             case 'xhtml':
                 if(isset(Emojione::$shortcode_replace[$match]))
-                    $renderer->doc .= '<!-- shortnameToImage: -->'. $this->shortnameToImage($match);
+                    $renderer->doc .= $this->shortnameToImage($match);
                 else
-                    $renderer->doc .= '<!-- unicodeToImage: -->'. $this->unicodeToImage($unicode);
+                    $renderer->doc .= $this->unicodeToImage($unicode);
             break;
             default:
                 $renderer->cdata($unicode);
