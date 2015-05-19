@@ -4,4 +4,4 @@ email   ptbrown@whoopdedo.org
 date    2015-05-18
 name    Emoji Substitution
 desc    Emoji substitution plugin using graphics from EmojiOne <http://www.emojione.com>
-url     http://www.whoopdedo.org/doku/plugin/emojione
+url     http://www.whoopdedo.org/doku/wiki/emojione
