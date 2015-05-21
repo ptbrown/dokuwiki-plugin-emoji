@@ -2,8 +2,8 @@
 /**
  * EmojiOne extension (Helper Component)
  *
- * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
- * @author  Patrick Brown <ptbrown@whoopdedo.org></ptbrown>
+ * @license     GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
+ * @author      Patrick Brown <ptbrown@whoopdedo.org></ptbrown>
  */
 
 // must be run within Dokuwiki
@@ -13,7 +13,7 @@ require __DIR__.'/Emojione.php';
 use Emojione\Emojione;
 Emojione::$unicodeAlt = true;
 Emojione::$imageType = 'png';
-Emojione::$sprites = true;
+Emojione::$sprites = false;
 /* Don't replace copyright/registration mark */
 Emojione::$unicodeRegexp = str_replace('\\xC2[\\xA9\\xAE]|', '', Emojione::$unicodeRegexp);
 
@@ -28,6 +28,18 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
         /* Inserts smileys into the shortcode list so I can use a single callback to handle both. */
         Emojione::$shortcode_replace = array_merge(Emojione::$shortcode_replace, Emojione::$ascii_replace);
         $this->smileyRegexp = '(?:'.join('|',array_map('preg_quote_cb', $smileys)).')';
+        $assetsrc = DOKU_BASE.'lib/plugins/emoji/';
+        switch($this->getConf('assetsrc')) {
+            case 'cdn':
+                $assetsrc = '//cdn.jsdelivr.net/emojione/';
+                break;
+            case 'private_cdn':
+                $asseturi = $this->getConf('asseturi');
+                if($asseturi)
+                    $assetsrc = $asseturi;
+                break;
+        }
+        Emojione::$imagePathPNG = $assetsrc.'assets/png/';
     }
 
     public function getType() {
