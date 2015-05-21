@@ -11,12 +11,8 @@
     margin: 0;
     overflow: hidden;
     font-size: .95em;
-    border: 1px solid #6E6E6E;
-    background-color: white;
-/*
-    border-radius: 5px;
-    box-shadow: 3px 3px 3px rgba(0,0,0,.2);
-*/
+    border: 1px solid @ini_border;
+    background-color: @ini_background_alt;
     a:hover {
         cursor: pointer;
     }
@@ -37,13 +33,14 @@
             height: 100%;
             line-height: 1.83em;
             padding: 0 1.54em 0 .615em;
-            color: #4f4f4f;
+            color: @ini_text;
+            text-decoration: none !important;
         }
     }
     .active,
     li:hover {
-        background: #6E6E6E;
-        color: white;
+        background: @ini_link;
+        color: @ini_background;
 
         a {
             color: inherit;
@@ -63,10 +60,10 @@
 
     .textcomplete-footer {
         margin-top: .3em;
-        background: #e6e6e6;
+        background: @ini_background_neu;
 
         a {
-            color: #7e7e7e;
+            color: @ini_text_neu;
             text-decoration: none;
             text-transform: uppercase;
             letter-spacing: .05em;
