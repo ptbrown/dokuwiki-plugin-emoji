@@ -4,21 +4,21 @@
  * @license     GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author      Patrick Brown <ptbrown@whoopdedo.org>
  */
-//<script>
 /* DOKUWIKI:include_once jquery.textcomplete.js */
 
 +function(){
-    var byLengthCompare = function(a,b) { return a.length>b.length; };
-    Array.prototype.sortByLength = function() {
-        return this.sort(byLengthCompare);
-    }
-}();
+'use strict';
+
+var byLengthCompare = function(a,b) { return a.length>b.length; };
+Array.prototype.sortByLength = function() {
+    return this.sort(byLengthCompare);
+};
 
 jQuery(function(){
 
-    var editForm = jQuery('#wiki__text');
-    if(editForm) {
-        jQuery.getJSON(DOKU_BASE+'lib/plugins/emoji/emoji_strategy.json',
+    var $editForm = jQuery('#wiki__text');
+    if($editForm) {
+        jQuery.getJSON(DOKU_BASE + 'lib/plugins/emoji/emoji_strategy.json',
               function(emojiStrategy) {
                     var assetUri = '//cdn.jsdelivr.net/emojione/assets/png/';
                     var cacheBustParam = '?v=1.2.4';
@@ -28,7 +28,7 @@ jQuery(function(){
                     if(emoji_assetsrc) {
                         assetUri = emoji_assetsrc + 'assets/png/';
                     }
-                    editForm.textcomplete([{
+                    $editForm.textcomplete([{
                         match: /\B:([\-+]?[\-+\w]+)$/,
                         /* TODO disable where emoji is not allowed (code blocks, headings, etc)
                         context: function(text) {
@@ -61,10 +61,10 @@ jQuery(function(){
                             return ':' + shortname + ': ';
                         },
                         index: 1,
-                        cache: true,
+                        cache: true
                     }], { footer: langFooter });
               });
     }
 
 });
-//</script>
+}();
