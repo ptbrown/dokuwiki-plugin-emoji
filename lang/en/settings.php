@@ -1,6 +1,6 @@
 <?php
 /**
- * * English language file
+ * English language file for Emoji plugin configuration
  *
  * @license     GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author      Patrick Brown <ptbrown@whoopdedo.org>
