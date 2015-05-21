@@ -6,9 +6,9 @@ plugin duplicates the "smiley" feature of DokuWiki, so you probably want to
 disable that configuration option.
 
 To insert a smiling face, you can:
-  - Copy the Unicode character, 😄
-  - Type a shortname, :smile:
-  - Type an emoticon, :-)
+  - Copy the Unicode character, `😄`
+  - Type a shortname, `:smile:`
+  - Type an emoticon, `:-)`
 
 To avoid unintended substitution, short names and emoticons must be separated
 from other text with spaces.
