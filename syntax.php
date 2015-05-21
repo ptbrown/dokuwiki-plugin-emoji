@@ -33,7 +33,7 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
             case 'cdn':
                 $assetsrc = '//cdn.jsdelivr.net/emojione/';
                 break;
-            case 'private_cdn':
+            case 'external':
                 $asseturi = $this->getConf('asseturi');
                 if($asseturi)
                     $assetsrc = $asseturi;

@@ -7,5 +7,5 @@
  */
 
 $meta['assetsrc']       = array('multichoice',
-                                '_choices' => array('builtin', 'cdn', 'private'));
+                                '_choices' => array('builtin', 'cdn', 'external'));
 $meta['asseturi']       = array('string');
