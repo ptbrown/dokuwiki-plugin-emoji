@@ -26,8 +26,16 @@ class action_plugin_emoji extends DokuWiki_Action_Plugin {
         }
         $event->data['link'][] = array(
             'type' => 'text/css',
-            'rel' => 'stylesheet',
+            'rel'  => 'stylesheet',
             'href' => $assetsrc.'assets/css/emojione.min.css'
+        );
+        /* Insert JS variable for CDN server. */
+        /* Use a global variable because otherwise there would need to be yet */
+        /* another hook to modify the JSINFO array that has already been written. */
+        $json = new JSON();
+        $event->data['script'][] = array(
+            'type'  => 'text/javascript',
+            '_data' => 'var emoji_assetsrc = '.$json->encode($assetsrc).';'
         );
     }
 

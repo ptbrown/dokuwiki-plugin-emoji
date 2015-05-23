@@ -25,6 +25,9 @@ jQuery(function(){
                     var langFooter = '<a href="http://www.emoji.codes" target="_blank">&nbsp;' +
                                       LANG.plugins.emoji.browseall +
                                       '<span class="arrow">&#10697;</span></a>';
+                    if(emoji_assetsrc) {
+                        assetUri = emoji_assetsrc + 'assets/png/';
+                    }
                     editForm.textcomplete([{
                         match: /\B:([\-+]?[\-+\w]+)$/,
                         /* TODO disable where emoji is not allowed (code blocks, headings, etc)
