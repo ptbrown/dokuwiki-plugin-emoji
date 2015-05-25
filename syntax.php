@@ -30,14 +30,23 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
      */
     public $unicodeRegexp = '(?:[#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3(?!\\xEF\\xB8\\x8E)|[#0-9]\\xEF\\xB8\\x8F|\\xC2[\\xA9\\xAE]\\xEF\\xB8\\x8F|\\xE2..\\xEF\\xB8\\x8F|\\xE2[\\x8C-\\x90\\x98-\\x9E\\xAC-\\xAF].(?!\\xEF\\xB8\\x8E)|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])\\xEF\\xB8\\x8F|\\xF0\\x9F(?>\\x87.\\xF0\\x9F\\x87.|..(?>\\xEF\\xB8\\x8F)?)(?!\\xEF\\xB8\\x8E))';
 
-    private $smileys;
+    private $smileys = array(
+        '8-O' => '1F62F',
+        '8-o' => '1F62F',
+        ':-\\' => '1F615',
+        ':-?' => '1F616',
+        ':-|' => '1F601',
+        '^_^' => '1F604',
+        ':?:' => '2753',
+        ':!:' => '26A0',
+    );
     private $smileyRegexp;
 
     public function __construct() {
-        $this->smileys = Emojione::$ascii_replace;
+        $this->smileys = array_merge($this->smileys, Emojione::$ascii_replace);
         $smileys = array_keys($this->smileys);
         /* Inserts smileys into the shortcode list so I can use a single callback to handle both. */
-        Emojione::$shortcode_replace = array_merge(Emojione::$shortcode_replace, Emojione::$ascii_replace);
+        Emojione::$shortcode_replace = array_merge(Emojione::$shortcode_replace, $this->smileys);
         $this->smileyRegexp = '(?:'.join('|',array_map('preg_quote_cb', $smileys)).')';
 
         $assetsrc = DOKU_BASE.'lib/plugins/emoji/';
