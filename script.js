@@ -4,7 +4,7 @@
  * @license     GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author      Patrick Brown <ptbrown@whoopdedo.org>
  */
-/* DOKUWIKI:include_once jquery.textcomplete.js */
+/* DOKUWIKI:include_once script/jquery.textcomplete.js */
 
 +function(){
 'use strict';
@@ -18,7 +18,7 @@ jQuery(function(){
 
     var $editForm = jQuery('#wiki__text');
     if($editForm) {
-        jQuery.getJSON(DOKU_BASE + 'lib/plugins/emoji/emoji_strategy.json',
+        jQuery.getJSON(DOKU_BASE + 'lib/plugins/emoji/assets/emoji_strategy.json',
               function(emojiStrategy) {
                     var assetUri = '//cdn.jsdelivr.net/emojione/assets/png/';
                     var cacheBustParam = '?v=1.2.4';

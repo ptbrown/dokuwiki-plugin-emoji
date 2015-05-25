@@ -9,7 +9,7 @@
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();
 
-require __DIR__.'/Emojione.php';
+require 'emojione/Emojione.php';
 use Emojione\Emojione;
 Emojione::$unicodeAlt = true;
 Emojione::$imageType = 'png';
