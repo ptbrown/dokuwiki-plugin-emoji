@@ -29,7 +29,8 @@ jQuery(function(){
                         assetUri = emoji_assetsrc + 'assets/png/';
                     }
                     $editForm.textcomplete([{
-                        match: /\B:([\-+]?[\-+\w]+)$/,
+                        match: /(^|\s):([\-+]?[\-+\w]+)$/,
+                        index: 2,
                         /* TODO disable where emoji is not allowed (code blocks, headings, etc)
                         context: function(text) {
                         },
@@ -58,9 +59,8 @@ jQuery(function(){
                             return '<img class="emojione" src="' + fileName + '"/> :' + shortname + ':';
                         },
                         replace: function(shortname) {
-                            return ':' + shortname + ': ';
+                            return '$1:' + shortname + ': ';
                         },
-                        index: 1,
                         cache: true
                     }], { footer: langFooter });
               });
