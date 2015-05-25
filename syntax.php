@@ -14,10 +14,21 @@ use Emojione\Emojione;
 Emojione::$unicodeAlt = true;
 Emojione::$imageType = 'png';
 Emojione::$sprites = false;
-/* Don't replace copyright/registration mark */
-Emojione::$unicodeRegexp = str_replace('\\xC2[\\xA9\\xAE]|', '', Emojione::$unicodeRegexp);
 
 class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
+
+    /**
+     * Match emoji code points:
+     *   - Most characters followed by variant selector 16
+     *   - No characters followed by variant selector 15
+     *   - Characters above U+1F000
+     *   - Numbers with combining keycap U+20E3
+     *   - Miscellaneous Technical
+     *   - Control Pictures
+     *   - Miscellaneous Symbols and Dingbats
+     *   - Miscellaneous Symbols and Arrows
+     */
+    public $unicodeRegexp = '(?:[#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3|[#0-9]\\xEF\\xB8\\x8F|\\xC2[\\xA9\\xAE]\\xEF\\xB8\\x8F|\\xE2..\\xEF\\xB8\\x8F|\\xE2[\\x8C-\\x8F\\x90\\x98-\\x9E\\xAC-\\xAF].(?!\\xEF\\xB8\\x8E)|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])\\xEF\\xB8\\x8F|\\xF0\\x9F(?>\\x87.\\xF0\\x9F\\x87.|..(?>\\xEF\\xB8\\x8F)?)(?!\\xEF\\xB8\\x8E))';
 
     private $smileys;
     private $smileyRegexp;
@@ -28,6 +39,7 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
         /* Inserts smileys into the shortcode list so I can use a single callback to handle both. */
         Emojione::$shortcode_replace = array_merge(Emojione::$shortcode_replace, Emojione::$ascii_replace);
         $this->smileyRegexp = '(?:'.join('|',array_map('preg_quote_cb', $smileys)).')';
+
         $assetsrc = DOKU_BASE.'lib/plugins/emoji/';
         switch($this->getConf('assetsrc')) {
             case 'cdn':
@@ -57,29 +69,31 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
     }
 
     public function handle($match, $state, $pos, Doku_Handler $handler) {
+        /* Clean up variant selector, I don't trust the library to do this. */
+        $match = str_replace("\xEF\xB8\x8F", "", $match);
         $unicode = $this->toUnicode($match);
-        $shortname = $this->toShortname($match);
-        return array($match,$unicode,$shortname);
+        return array($match,$unicode);
     }
 
     public function render($mode, Doku_Renderer $renderer, $data) {
-        list($match,$unicode,$shortname) = $data;
+        list($match,$unicode) = $data;
         switch($mode) {
             case 'xhtml':
                 if(isset(Emojione::$shortcode_replace[$match]))
                     $renderer->doc .= $this->shortnameToImage($match);
                 else
                     $renderer->doc .= $this->unicodeToImage($unicode);
-            break;
+                break;
             default:
-                $renderer->cdata($unicode);
-            break;
+                /* Adds the text variant selector */
+                $renderer->cdata($unicode . "\xEF\xB8\x8E");
+                break;
         }
         return true;
     }
 
     private function getUnicodeRegexp() {
-        return preg_replace('/\((?!\?)/', '(?:', Emojione::$unicodeRegexp);
+        return $this->unicodeRegexp;
     }
 
     private function getShortnameRegexp() {
