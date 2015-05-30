@@ -28,7 +28,7 @@ if (typeof jQuery === 'undefined') {
       }
       if (typeof strategies === 'string') {
         if (!completer) return;
-        args.shift()
+        args.shift();
         completer[strategies].apply(completer, args);
         if (strategies === 'destroy') {
           $this.removeData('textComplete');
@@ -130,7 +130,7 @@ if (typeof jQuery === 'undefined') {
 
     if (element === document.activeElement) {
       // element has already been focused. Initialize view objects immediately.
-      this.initialize()
+      this.initialize();
     } else {
       // Initialize view objects lazily.
       var self = this;
@@ -147,7 +147,7 @@ if (typeof jQuery === 'undefined') {
     }
 
     return Completer.DEFAULTS;
-  }
+  };
 
   $.extend(Completer.prototype, {
     // Public properties
@@ -253,7 +253,7 @@ if (typeof jQuery === 'undefined') {
           if (match) { return [strategy, match[strategy.index], match]; }
         }
       }
-      return []
+      return [];
     },
 
     // Call the search method of selected strategy..
@@ -299,7 +299,7 @@ if (typeof jQuery === 'undefined') {
 
   var include = function (zippedData, datum) {
     var i, elem;
-    var idProperty = datum.strategy.idProperty
+    var idProperty = datum.strategy.idProperty;
     for (i = 0; i < zippedData.length; i++) {
       elem = zippedData[i];
       if (elem.strategy !== datum.strategy) continue;
@@ -352,7 +352,7 @@ if (typeof jQuery === 'undefined') {
     findOrCreateElement: function (option) {
       var $parent = option.appendTo;
       if (!($parent instanceof $)) { $parent = $($parent); }
-      var $el = $parent.children('.dropdown-menu')
+      var $el = $parent.children('.dropdown-menu');
       if (!$el.length) {
         $el = $('<ul class="dropdown-menu"></ul>').css({
           display: 'none',
@@ -392,7 +392,7 @@ if (typeof jQuery === 'undefined') {
       this.$inputEl.off('.' + this.id);
       this.clear();
       this.$el = this.$inputEl = this.completer = null;
-      delete dropdownViews[this.id]
+      delete dropdownViews[this.id];
     },
 
     render: function (zippedData) {
@@ -470,7 +470,7 @@ if (typeof jQuery === 'undefined') {
 
     isEnter: function (e) {
       var modifiers = e.ctrlKey || e.altKey || e.metaKey || e.shiftKey;
-      return !modifiers && (e.keyCode === 13 || e.keyCode === 9 || (this.option.completeOnSpace === true && e.keyCode === 32))  // ENTER, TAB
+      return !modifiers && (e.keyCode === 13 || e.keyCode === 9 || (this.option.completeOnSpace === true && e.keyCode === 32));  // ENTER, TAB
     },
 
     isPageup: function (e) {
@@ -497,7 +497,7 @@ if (typeof jQuery === 'undefined') {
     // ---------------
 
     _bindEvents: function () {
-      this.$el.on('mousedown.' + this.id, '.textcomplete-item', $.proxy(this._onClick, this))
+      this.$el.on('mousedown.' + this.id, '.textcomplete-item', $.proxy(this._onClick, this));
       this.$el.on('mouseover.' + this.id, '.textcomplete-item', $.proxy(this._onMouseover, this));
       this.$inputEl.on('keydown.' + this.id, $.proxy(this._onKeydown, this));
     },
@@ -597,7 +597,7 @@ if (typeof jQuery === 'undefined') {
       this.$el.children().each(function (i) {
         if ($(this).position().top > threshold) {
           target = i;
-          return false
+          return false;
         }
       });
       this._index = target;
@@ -887,7 +887,7 @@ if (typeof jQuery === 'undefined') {
     position: 'absolute',
     top: 0,
     whiteSpace: 'pre-wrap'
-  }
+  };
 
   Textarea.COPY_PROPERTIES = [
     'border-width', 'font-family', 'font-size', 'font-style', 'font-variant',
@@ -1011,7 +1011,7 @@ if (typeof jQuery === 'undefined') {
       this.el.focus();
       var range = document.selection.createRange();
       range.moveStart('character', -this.el.value.length);
-      var arr = range.text.split(sentinelChar)
+      var arr = range.text.split(sentinelChar);
       return arr.length === 1 ? arr[0] : arr[1];
     }
   });
@@ -1042,7 +1042,7 @@ if (typeof jQuery === 'undefined') {
     // When an dropdown item is selected, it is executed.
     select: function (value, strategy) {
       var pre = this.getTextFromHeadToCaret();
-      var sel = window.getSelection()
+      var sel = window.getSelection();
       var range = sel.getRangeAt(0);
       var selection = range.cloneRange();
       selection.selectNodeContents(range.startContainer);
