@@ -25,7 +25,7 @@ class emoji_conflicts_test extends DokuWikiTest {
         $this->assertNotContains('&#039;', p_wiki_xhtml('emoji_page'), 'Emoji conflicts with monospace.');
     }
     function test_emoji_vs_footnote() {
-        saveWikiText('emoji_page', '((** X **))');
+        saveWikiText('emoji_page', '((** X **))', 'Test');
         $this->assertNotContains('&#x1f609;', p_wiki_xhtml('emoji_page'), 'Emoji conflicts with footnote.');
     }
 }
