@@ -9,11 +9,36 @@
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();
 
-require 'emojione/Emojione.php';
-use Emojione\Emojione;
-Emojione::$unicodeAlt = true;
-Emojione::$imageType = 'png';
-Emojione::$sprites = false;
+require_once 'emojione/RulesetInterface.php';
+require_once 'emojione/ClientInterface.php';
+require_once 'emojione/Client.php';
+require_once 'emojione/Ruleset.php';
+
+class dwplugin_emoji_ruleset extends Emojione\Ruleset {
+    protected static $smileys = array(
+        '8-O' => '1F62F',
+        '8-o' => '1F62F',
+        ':-\\' => '1F615',
+        ':-?' => '1F616',
+        ':-|' => '1F601',
+        '^_^' => '1F604',
+        ':?:' => '2753',
+        ':!:' => '26A0',
+    );
+
+    public function __construct() {
+        $this->ascii_replace = array_merge($this->ascii_replace, static::$smileys);
+        $smileys = array_keys($this->ascii_replace);
+        $this->asciiRegexp = '(?:'.join('|',array_map('preg_quote_cb', $smileys)).')';
+        /* Inserts smileys into the shortcode list so I can use a single callback to handle both. */
+        $this->shortcode_replace = array_merge($this->shortcode_replace, $this->ascii_replace);
+    }
+
+    public function isShortCode($match) {
+        return isset($this->shortcode_replace[$match]);
+    }
+
+}
 
 class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
 
@@ -30,25 +55,16 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
      */
     public $unicodeRegexp = '(?:[#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3(?!\\xEF\\xB8\\x8E)|[#0-9]\\xEF\\xB8\\x8F|\\xC2[\\xA9\\xAE]\\xEF\\xB8\\x8F|\\xE2..\\xEF\\xB8\\x8F|\\xE2[\\x8C-\\x90\\x98-\\x9E\\xAC-\\xAF].(?!\\xEF\\xB8\\x8E)|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])\\xEF\\xB8\\x8F|\\xF0\\x9F(?>\\x87.\\xF0\\x9F\\x87.|..(?>\\xEF\\xB8\\x8F)?)(?!\\xEF\\xB8\\x8E))';
 
-    private $smileys = array(
-        '8-O' => '1F62F',
-        '8-o' => '1F62F',
-        ':-\\' => '1F615',
-        ':-?' => '1F616',
-        ':-|' => '1F601',
-        '^_^' => '1F604',
-        ':?:' => '2753',
-        ':!:' => '26A0',
-    );
-    private $smileyRegexp;
+    protected $client;
+    protected $ruleset;
 
     public function __construct() {
-        $this->smileys = array_merge($this->smileys, Emojione::$ascii_replace);
-        $smileys = array_keys($this->smileys);
-        /* Inserts smileys into the shortcode list so I can use a single callback to handle both. */
-        Emojione::$shortcode_replace = array_merge(Emojione::$shortcode_replace, $this->smileys);
-        $this->smileyRegexp = '(?:'.join('|',array_map('preg_quote_cb', $smileys)).')';
+        $this->ruleset = new dwplugin_emoji_ruleset();
 
+        $this->client = new Emojione\Client($this->ruleset);
+        $this->client->unicodeAlt = true;
+        $this->client->sprites = false;
+        $this->client->imageType = 'png';
         $assetsrc = DOKU_BASE.'lib/plugins/emoji/';
         switch($this->getConf('assetsrc')) {
             case 'cdn':
@@ -60,7 +76,7 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
                     $assetsrc = $asseturi;
                 break;
         }
-        Emojione::$imagePathPNG = $assetsrc.'assets/png/';
+        $this->client->imagePathPNG = $assetsrc.'assets/png/';
     }
 
     public function getType() {
@@ -88,7 +104,7 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
         list($match,$unicode) = $data;
         switch($mode) {
             case 'xhtml':
-                if(isset(Emojione::$shortcode_replace[$match]))
+                if($this->ruleset->isShortCode($match))
                     $renderer->doc .= $this->shortnameToImage($match);
                 else
                     $renderer->doc .= $this->unicodeToImage($unicode);
@@ -106,19 +122,19 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
     }
 
     private function getShortnameRegexp() {
-        return preg_replace('/\((?!\?)/', '(?:', Emojione::$shortcodeRegexp);
+        return preg_replace('/\((?!\?)/', '(?:', $this->client->shortcodeRegexp);
     }
 
     private function getSmileyRegexp() {
-        return $this->smileyRegexp;
+        return $this->ruleset->getAsciiRegexp();
     }
 
     private function toUnicode($shortname) {
         if(isset($this->smileys[$shortname])) {
             $unicode = $this->smileys[$shortname];
         }
-        elseif(isset(Emojione::$shortcode_replace[$shortname])) {
-            $unicode = Emojione::$shortcode_replace[$shortname];
+        elseif($this->ruleset->isShortCode($shortname)) {
+            $unicode = $this->ruleset->getShortcodeReplace()[$shortname];
         }
         else {
             return $shortname;
@@ -133,15 +149,15 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
     }
 
     private function toShortname($unicode) {
-        return Emojione::toShortCallback(array($unicode,$unicode));
+        return $this->client->toShortCallback(array($unicode,$unicode));
     }
 
     private function shortnameToImage($shortname) {
-        return Emojione::shortnameToImageCallback(array($shortname,$shortname));
+        return $this->client->shortnameToImageCallback(array($shortname,$shortname));
     }
 
     private function unicodeToImage($unicode) {
-        return Emojione::unicodeToImageCallback(array($unicode,$unicode));
+        return $this->client->unicodeToImageCallback(array($unicode,$unicode));
     }
 
 }
