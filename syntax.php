@@ -55,6 +55,7 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
                 $assetsrc = '//cdn.jsdelivr.net/emojione/';
                 break;
             case 'external':
+                /* really should be called "asseturl", oops. Too late now */
                 $asseturi = $this->getConf('asseturi');
                 if($asseturi)
                     $assetsrc = $asseturi;
