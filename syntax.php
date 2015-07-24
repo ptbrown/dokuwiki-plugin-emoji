@@ -38,6 +38,9 @@ class dwplugin_emoji_ruleset extends Emojione\Ruleset {
         return isset($this->shortcode_replace[$match]);
     }
 
+    public function replaceShortCode($match) {
+        return $this->shortcode_replace[$match];
+    }
 }
 
 class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
@@ -135,7 +138,7 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
             $unicode = $this->smileys[$shortname];
         }
         elseif($this->ruleset->isShortCode($shortname)) {
-            $unicode = $this->ruleset->getShortcodeReplace()[$shortname];
+            $unicode = $this->ruleset->replaceShortCode($shortname);
         }
         else {
             return $shortname;
