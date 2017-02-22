@@ -113,6 +113,18 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
                 else
                     $renderer->doc .= $this->unicodeToImage($unicode);
                 break;
+            case 'odt':
+                if($this->ruleset->isShortCode($match))
+                    $link = $this->shortnameToImage($match);
+                else
+                    $link = $this->unicodeToImage($unicode);
+
+                if (preg_match('#[^/]\w*\.png#', $link, $matches) == 1) {
+                    $path = DOKU_PLUGIN.'emoji/assets/png/'.$matches[0];
+                    list($width, $height)  = $renderer->_odtGetImageSize ($path, '20', '20');
+                    $renderer->_odtAddImage($path, $width.'cm', $height.'cm');
+                }
+                break;
             default:
                 /* Adds the text variant selector */
                 $renderer->cdata($unicode . "\xEF\xB8\x8E");
