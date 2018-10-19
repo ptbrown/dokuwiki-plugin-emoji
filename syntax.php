@@ -56,7 +56,7 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
      *   - Miscellaneous Symbols and Dingbats
      *   - Miscellaneous Symbols and Arrows
      */
-    public $unicodeRegexp = '(?:[#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3(?!\\xEF\\xB8\\x8E)|[#0-9]\\xEF\\xB8\\x8F|\\xC2[\\xA9\\xAE]\\xEF\\xB8\\x8F|\\xE2..\\xEF\\xB8\\x8F|\\xE2[\\x8C-\\x90\\x98-\\x9E\\xAC-\\xAF].(?!\\xEF\\xB8\\x8E)|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])\\xEF\\xB8\\x8F|\\xF0\\x9F(?>\\x87.\\xF0\\x9F\\x87.|..(?>\\xEF\\xB8\\x8F)?)(?!\\xEF\\xB8\\x8E))';
+    public $unicodeRegexp = '(?:[*#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3(?!\\xEF\\xB8\\x8E)|[*#0-9]\\xEF\\xB8\\x8F|\\xC2[\\xA9\\xAE]\\xEF\\xB8\\x8F|\\xE2..(?>\\xF0\\x9F\\x8F[\\xBB-\\xBF])?\\xEF\\xB8\\x8F|\\xE2[\\x8C-\\x90\\x98-\\x9E\\xAC-\\xAF].(?>\\xF0\\x9F\\x8F[\\xBB-\\xBF])?(?!\\xEF\\xB8\\x8E)|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])\\xEF\\xB8\\x8F|\\xF0\\x9F(?>\\x87.\\xF0\\x9F\\x87.|..(?>\\xEF\\xB8\\x8F)?)(?!\\xEF\\xB8\\x8E))';
 
     protected $client;
     protected $ruleset;
@@ -71,7 +71,7 @@ class syntax_plugin_emoji extends DokuWiki_Syntax_Plugin {
         $assetsrc = DOKU_BASE.'lib/plugins/emoji/';
         switch($this->getConf('assetsrc')) {
             case 'cdn':
-                $assetsrc = '//cdn.jsdelivr.net/emojione/';
+                $assetsrc = 'https://cdn.jsdelivr.net/emojione/';
                 break;
             case 'external':
                 /* really should be called "asseturl", oops. Too late now */

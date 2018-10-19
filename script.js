@@ -20,9 +20,9 @@ jQuery(function(){
     if($editForm) {
         jQuery.getJSON(DOKU_BASE + 'lib/plugins/emoji/assets/emoji_strategy.json',
               function(emojiStrategy) {
-                    var assetUri = '//cdn.jsdelivr.net/emojione/assets/png/';
-                    var cacheBustParam = '?v=1.2.4';
-                    var langFooter = '<a href="http://www.emoji.codes" target="_blank">&nbsp;' +
+                    var assetUri = 'https://cdn.jsdelivr.net/emojione/assets/png/';
+                    var cacheBustParam = '?v=2.2.7';
+                    var langFooter = '<a href="https://www.emojicopy.com" target="_blank">&nbsp;' +
                                       LANG.plugins.emoji.browseall +
                                       '<span class="arrow">&#10697;</span></a>';
                     if(emoji_assetsrc) {
