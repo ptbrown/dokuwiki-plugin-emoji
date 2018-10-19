@@ -10,8 +10,8 @@
 'use strict';
 
 var byLengthCompare = function(a,b) { return a.length>b.length; };
-Array.prototype.sortByLength = function() {
-    return this.sort(byLengthCompare);
+var sortByLength = function(a) {
+    return a.sort(byLengthCompare);
 };
 
 jQuery(function(){
@@ -48,8 +48,8 @@ jQuery(function(){
                             });
 
                             if(term.length >= 3) {
-                                names.sortByLength();
-                                aliases.sortByLength();
+                                sortByLength(names);
+                                sortByLength(aliases);
                                 keywords.sort();
                             }
                             addTerm(names.concat(aliases).concat(keywords));

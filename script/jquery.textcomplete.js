@@ -361,6 +361,22 @@ if (typeof jQuery === 'undefined') {
 +function ($) {
   'use strict';
 
+  /* @author: Anurag, https://stackoverflow.com/a/2641047 */
+  /* @copyright: CC-BY-SA */
+  var bindFirst = function(el, name, fn) {
+      // bind as you normally would
+      // don't want to miss out on any jQuery magic
+      el.on(name, fn);
+
+      el.each(function() {
+          var handlers = $._data(this, 'events')[name.split('.')[0]];
+          // take out the handler we just inserted from the end
+          var handler = handlers.pop();
+          // move it at the beginning
+          handlers.splice(0, 0, handler);
+      });
+  };
+
   var $window = $(window);
 
   var include = function (zippedData, datum) {
@@ -590,7 +606,7 @@ if (typeof jQuery === 'undefined') {
       this.$el.on('mousedown.' + this.id, '.textcomplete-item', $.proxy(this._onClick, this));
       this.$el.on('touchstart.' + this.id, '.textcomplete-item', $.proxy(this._onClick, this));
       this.$el.on('mouseover.' + this.id, '.textcomplete-item', $.proxy(this._onMouseover, this));
-      this.$inputEl.on('keydown.' + this.id, $.proxy(this._onKeydown, this));
+      bindFirst(this.$inputEl, 'keydown.' + this.id, $.proxy(this._onKeydown, this));
     },
 
     _onClick: function (e) {
@@ -639,30 +655,28 @@ if (typeof jQuery === 'undefined') {
 
       switch (command) {
         case commands.KEY_UP:
-          e.preventDefault();
           this._up();
           break;
         case commands.KEY_DOWN:
-          e.preventDefault();
           this._down();
           break;
         case commands.KEY_ENTER:
-          e.preventDefault();
           this._enter(e);
           break;
         case commands.KEY_PAGEUP:
-          e.preventDefault();
           this._pageup();
           break;
         case commands.KEY_PAGEDOWN:
-          e.preventDefault();
           this._pagedown();
           break;
         case commands.KEY_ESCAPE:
-          e.preventDefault();
           this.deactivate();
           break;
+        default:
+          return;
       }
+      e.preventDefault();
+      e.stopImmediatePropagation();
     },
 
     _defaultKeydown: function (e) {
