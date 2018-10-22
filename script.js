@@ -17,7 +17,7 @@ var sortByLength = function(a) {
 jQuery(function(){
 
     var $editForm = jQuery('#wiki__text');
-    if($editForm) {
+    if($editForm.length) {
         jQuery.getJSON(DOKU_BASE + 'lib/plugins/emoji/assets/emoji_strategy.json',
               function(emojiStrategy) {
                     var assetUri = 'https://cdn.jsdelivr.net/emojione/assets/png/';
