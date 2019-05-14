@@ -46,7 +46,7 @@ if (typeof jQuery === 'undefined') {
       }
       if (typeof strategies === 'string') {
         if (!completer) return;
-        args.shift()
+        args.shift();
         completer[strategies].apply(completer, args);
         if (strategies === 'destroy') {
           $this.removeData('textComplete');
@@ -381,7 +381,7 @@ if (typeof jQuery === 'undefined') {
 
   var include = function (zippedData, datum) {
     var i, elem;
-    var idProperty = datum.strategy.idProperty
+    var idProperty = datum.strategy.idProperty;
     for (i = 0; i < zippedData.length; i++) {
       elem = zippedData[i];
       if (elem.strategy !== datum.strategy) continue;
@@ -1189,7 +1189,7 @@ if (typeof jQuery === 'undefined') {
       this.el.focus();
       var range = document.selection.createRange();
       range.moveStart('character', -this.el.value.length);
-      var arr = range.text.split(sentinelChar)
+      var arr = range.text.split(sentinelChar);
       return arr.length === 1 ? arr[0] : arr[1];
     }
   });
